@@ -12,19 +12,23 @@ class KeyObj{
     this.string = keyString
     this.age = 0
     this.vector = this.getRandomVector()
-    this.speed = this.getRandomSpeed()
+    this.id = Math.random() * 100 * Math.random()
+    this.color = this.getRandomColor()
   }
   incrementAge(amount){
     this.age += amount
   }
   getRandomVector(){
     return {
-      x: Math.random() > .5 ? Math.random() : - Math.random(),
-      y: Math.random() > .5 ? Math.random() : - Math.random()
+      x: Math.random() > .5 ? Math.random() * this.getRandomSpeed() : - Math.random() * this.getRandomSpeed(),
+      y: - Math.random() * this.getRandomSpeed()
     }
   }
   getRandomSpeed(){
-    return Math.random() * 100
+    return Math.random() * 10000
+  }
+  getRandomColor(){
+    return Math.random() > .5 ? '#00ff41' : '008f11'
   }
 }
 
@@ -71,7 +75,7 @@ function App() {
         {
           keys.map(keyContainer=>{
             return(
-              <Letter letter={keyContainer} />
+              <Letter key={keyContainer.id} letter={keyContainer} />
             )
           })
         }
@@ -82,7 +86,14 @@ function App() {
         paddingBottom: '1rem'
       }}>
       
-      <Keyboard></Keyboard>
+      <Keyboard display={{
+        '{enter}': 'enter',
+        '{bksp}': 'bksp',
+        '{tab}': 'tab',
+        '{lock}': 'lock',
+        '{shift}': 'shift',
+        '{space}': 'space',
+        }} theme={'hg-theme-default hg-layout-default matrix-keyboard'}></Keyboard>
       </div>
     </div>
   );
