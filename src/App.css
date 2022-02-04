@@ -39,7 +39,7 @@
 }
 
 .matrix-font{
-  font-family: 'monospace';
+  font-family: 'monospace' !important;
   color: #008f11;
 }
 

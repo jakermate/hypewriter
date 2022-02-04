@@ -14,6 +14,7 @@ class KeyObj{
     this.vector = this.getRandomVector()
     this.id = Math.random() * 100 * Math.random()
     this.color = this.getRandomColor()
+    this.rand = Math.random()
   }
   incrementAge(amount){
     this.age += amount
@@ -93,7 +94,9 @@ function App() {
         '{lock}': 'lock',
         '{shift}': 'shift',
         '{space}': 'space',
-        }} theme={'hg-theme-default hg-layout-default matrix-keyboard'}></Keyboard>
+        }} theme={'hg-theme-default hg-layout-default matrix-keyboard'}
+        onChange={(k)=>console.log(k)}
+        ></Keyboard>
       </div>
     </div>
   );

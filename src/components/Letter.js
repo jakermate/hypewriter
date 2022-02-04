@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styled, {keyframes} from 'styled-components'
 export default function Letter(props) {
-  return <LetterDiv vector={props.letter.vector} className="matrix-font" style={{
+  return <LetterDiv rand={props.letter.rand} vector={props.letter.vector} className="matrix-font" style={{
     position: 'absolute',
+    fontFamily: 'monospace',
     bottom: 0,
     left: '50%',
     color: props.letter.color,
@@ -14,16 +15,16 @@ export default function Letter(props) {
   </LetterDiv>;
 }
 
-const fly = (x, y) => keyframes`
+const fly = (x, y, rand) => keyframes`
   from{
-    transform: translate(0px, 0px);
-    opacity: 1,
+    transform: translate(0px, 0px) scale(1);
+    opacity: 1;
   }
   to{
-    transform: translate(${x}px, ${y}px);
+    transform: translate(${x}px, ${y}px) scale(${rand > .5 ? 2 : 0});
     opacity: 0;
   }
 `
 const LetterDiv = styled.div`
-  animation: ${props => fly(props.vector.x, props.vector.y)} 2s linear forwards;
+  animation: ${props => fly(props.vector.x, props.vector.y, props.rand)} 2s linear forwards;
 `
