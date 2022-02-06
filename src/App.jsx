@@ -6,6 +6,7 @@ import { useEffect, useState, useRef } from 'react';
 import char from 'char-to-string'
 import Letter from './components/Letter';
 import Switch from './components/Switch';
+import Matrix from './components/Matrix';
 
 class KeyObj {
   ageLimit = 2
@@ -80,19 +81,23 @@ function App() {
   function setDark(){
     document.documentElement.classList.add('dark')
     document.documentElement.classList.remove('light')
-    localStorage.setItem("theme", "light")
+    localStorage.setItem("theme", "dark")
   }
   function setLight(){
     document.documentElement.classList.add('light')
     document.documentElement.classList.remove('dark')
-    localStorage.setItem("theme", "dark")
+    localStorage.setItem("theme", "light")
   }
   return (
-    <div className="App bg-white dark:bg-black">
+    <div className="App bg-slate-100 dark:bg-black">
       <div id="main-body" style={{
         flexGrow: 1,
         position: 'relative'
       }}>
+        {
+          localStorage.getItem("theme") === "dark" && 
+          <Matrix keys={keys}></Matrix>
+        }
         {
           keys.map(keyContainer => {
             return (
@@ -101,9 +106,9 @@ function App() {
           })
         }
       </div>
-      <div className="mx-auto pb-8 max-w-lg" style={{
+      <div className="mx-auto pb-8 max-w-lg relative z-10" style={{
       }}>
-        <Keyboard display={{
+        <Keyboard  display={{
           '{enter}': 'enter',
           '{bksp}': 'bksp',
           '{tab}': 'tab',

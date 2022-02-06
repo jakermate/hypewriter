@@ -6,7 +6,7 @@
   height: 100vh;
   overflow: hidden;
   /* background-color: #0d0208; */
-
+  transition: all 1s linear;
 }
 
 .App-logo {
@@ -41,6 +41,7 @@
 .matrix-font{
   font-family: 'monospace' !important;
   color: #008f11;
+  z-index: 100;
 }
 
 .matrix-keyboard{
