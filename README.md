@@ -1,5 +1,5 @@
 # Hypewriter
 
-Fun Matrix Hacker Gimmick
+[Get Hype With Hypewriter](https://jakermate.github.io/hypewriter/)
 
 "Time to fly..."
