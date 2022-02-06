@@ -6,7 +6,7 @@ export default function Letter(props) {
     fontFamily: 'monospace',
     bottom: 0,
     left: '50%',
-    color: props.letter.color,
+    color: props.theme == "dark" ? "black" : props.letter.color,
     fontSize: '6rem',
     fontWeight: 600,
     transition: 'all 2s linear',
