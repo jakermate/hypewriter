@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styled, {keyframes} from 'styled-components'
 export default function Letter(props) {
-  return <LetterDiv  rand={props.letter.rand} vector={props.letter.vector} className="matrix-font" style={{
+  return <LetterDiv  rand={props.letter.rand} vector={props.letter.vector} className="matrix-font font-mono" style={{
     position: 'absolute',
     fontFamily: 'monospace',
     bottom: 0,

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 
 export default function Matrix(props) {
     useEffect(() => {
+        window.addEventListener('resize', resizeCanvas)
         const canvas = document.getElementById('matrix-canvas');
         const ctx = canvas.getContext('2d');
 
@@ -28,8 +29,15 @@ export default function Matrix(props) {
                 else ypos[ind] = y + 20;
             });
         }
-
+        function resizeCanvas(){
+            canvas.width = document.body.offsetWidth;
+            canvas.height = document.body.offsetHeight;
+        }
         setInterval(matrix, 50);
+        return () =>{
+            window.removeEventListener('resize', resizeCanvas)
+        }
     }, [])
+    
     return <canvas id="matrix-canvas" className='absolute top-0 bottom-0 left-0 right-0 z-0'></canvas>;
 }

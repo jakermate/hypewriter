@@ -37,29 +37,62 @@ class KeyObj {
 }
 
 function App() {
+  // DISPLAYED KEY OBJECTS
   const [keys, setKeys] = useState([])
   const keyref = useRef()
+  // KEYBOARD UP/DOWN STATE
+  const [pressed, setPressed] = useState([])
+  const keyboardRef = useRef(null)
   // SETUP
   useEffect(() => {
     // Set theme
     setLight()
     // Listeners
     window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('keyup', handleKeyUp)
+
     const interval = setInterval(() => {
       updateKeys()
     }, 1000)
     return () => {
       clearInterval(interval)
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('keyup', handleKeyUp)
+    }
   }, [])
   useEffect(() => {
     keyref.current = keys
   }, [keys])
+
   // METHODS
+  // PHYSICAL KEYBOARD
   const handleKeyDown = (event) => {
-    let keyObj = new KeyObj(char(event.keyCode))
+    if(event.repeat) return
+    // Add to pressed
+    let keyString = char(event.keyCode)
+    if(pressed.includes(keyString)) return
+    setPressed(old => [...old, keyString])
+    // Create key object
+    let keyObj = new KeyObj(keyString)
     setKeys(old => [...old, keyObj])
+  }
+  const handleKeyUp = (event) => {
+    let keyString = char(event.keyCode)
+    setPressed(old => [...old.splice(old.indexOf(keyString))])
+  }
+  // VIRTUAL KEYBOARD
+  function keyboardPress(e){
+    let keyString = e.toUpperCase()
+    if(pressed.includes(keyString)) return
+    setPressed(old => [...old, keyString])
+    // Create key object
+    let keyObj = new KeyObj(keyString)
+    setKeys(old => [...old, keyObj])
+  }
+  function keyboardRelease(e){
+    console.log('release')
+    let keyString = e.toUpperCase()
+    setPressed(old => [...old.splice(old.indexOf(keyString))])
   }
   const updateKeys = () => {
     let currentKeys = keyref.current
@@ -88,6 +121,7 @@ function App() {
     document.documentElement.classList.remove('dark')
     localStorage.setItem("theme", "light")
   }
+ 
   return (
     <div className="App bg-slate-100 dark:bg-black">
       <div id="main-body" style={{
@@ -116,7 +150,10 @@ function App() {
           '{shift}': 'shift',
           '{space}': 'space',
         }} theme={'hg-theme-default hg-layout-default matrix-keyboard'}
-        onChange={(k) => console.log(k)}
+        onKeyPress={keyboardPress}  
+        onKeyReleased={keyboardRelease}        
+        keyboardRef={r => keyboardRef.current = r}
+        physicalKeyboardHighlight={true}
         ></Keyboard>
         <Switch toggleTheme={toggleTheme}></Switch>
       </div>
