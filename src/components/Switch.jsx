@@ -6,6 +6,6 @@ export default function Switch(props) {
         props.toggleTheme(checked)
     }, [checked])
     return <div id="theme-toggle" className="mt-6">
-        <Toggle offHandleColor={"#fff"} onHandleColor={"#fff"} checkedIcon={false} offColor={"#000"} onColor={"#00ff41"} onChange={() => toggleChecked(!checked)} checked={checked} uncheckedIcon={false}></Toggle>
+        <Toggle offHandleColor={"#0a3f94"} onHandleColor={"#b50505"} checkedIcon={false} offColor={"#4287f5"} onColor={"#f54242"} onChange={() => toggleChecked(!checked)} checked={checked} uncheckedIcon={false}></Toggle>
     </div>;
 }
