@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-
+import Letter from './Letter'
 export default function Matrix(props) {
     const ref = useRef()
     ref.current = props.keys
@@ -45,5 +45,13 @@ export default function Matrix(props) {
         }
     }, [])
     
-    return <canvas id="matrix-canvas" className='absolute top-0 bottom-0 left-0 right-0 z-0'></canvas>;
+    return <canvas id="matrix-canvas" className='absolute top-0 bottom-0 left-0 right-0 z-0'>
+          {
+          props.keys.map(keyContainer => {
+            return (
+              <Letter theme={localStorage.getItem("theme")} key={keyContainer.id} letter={keyContainer} />
+            )
+          })
+        }
+    </canvas>;
 }

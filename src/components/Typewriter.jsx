@@ -9,7 +9,7 @@ export default function Typewriter(props) {
         editPage(old => [...old, props.keys.at(-1)])
       }
     }, [props.keys])
-  return <div id="paper" className="w-full absolute bottom-0 mx-auto pb-12" style={{
+  return <div id="paper" className="w-full absolute bottom-0 mx-auto pb-12 flex flex-col-reverse" style={{
     perspective: '1000px',
     perspectiveOrigin: 'center 100%'
   }}>
@@ -21,4 +21,12 @@ export default function Typewriter(props) {
       })
     }
   </div>;
+}
+
+function Row(props){
+  return(
+    <div className="flex flex-row justify-start">
+      {props.children}
+    </div>
+  )
 }

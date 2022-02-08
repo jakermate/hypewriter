@@ -135,15 +135,9 @@ function App() {
           :
           <Typewriter keys={keys}></Typewriter>
         }
-        {/* {
-          keys.map(keyContainer => {
-            return (
-              <Letter theme={localStorage.getItem("theme")} key={keyContainer.id} letter={keyContainer} />
-            )
-          })
-        } */}
+      
       </div>
-      <div className="mx-auto pb-8 max-w-lg relative z-10" style={{
+      <div className="mx-auto pb-2 sm:pb-8 sm:max-w-lg relative z-10 w-full" style={{
       }}>
         <Keyboard  display={{
           '{enter}': 'enter',
