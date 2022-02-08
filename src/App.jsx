@@ -7,6 +7,7 @@ import char from 'char-to-string'
 import Letter from './components/Letter';
 import Switch from './components/Switch';
 import Matrix from './components/Matrix';
+import Typewriter from './components/Typewriter';
 
 class KeyObj {
   ageLimit = 2
@@ -129,16 +130,18 @@ function App() {
         position: 'relative'
       }}>
         {
-          localStorage.getItem("theme") === "dark" && 
+          localStorage.getItem("theme") === "dark" ? 
           <Matrix keys={keys}></Matrix>
+          :
+          <Typewriter keys={keys}></Typewriter>
         }
-        {
+        {/* {
           keys.map(keyContainer => {
             return (
               <Letter theme={localStorage.getItem("theme")} key={keyContainer.id} letter={keyContainer} />
             )
           })
-        }
+        } */}
       </div>
       <div className="mx-auto pb-8 max-w-lg relative z-10" style={{
       }}>

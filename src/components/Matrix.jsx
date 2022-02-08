@@ -8,10 +8,10 @@ export default function Matrix(props) {
         const canvas = document.getElementById('matrix-canvas');
         const ctx = canvas.getContext('2d');
 
-        const w = canvas.width = document.body.offsetWidth;
-        const h = canvas.height = document.body.offsetHeight;
-        const cols = Math.floor(w / 20) + 1;
-        const colArrays = Array(cols).fill(0);
+        let w = canvas.width = document.body.offsetWidth;
+        let h = canvas.height = document.body.offsetHeight;
+        let cols = Math.floor(w / 20) + 1;
+        let colArrays = Array(cols).fill(0);
 
         ctx.fillStyle = '#000';
         ctx.fillRect(0, 0, w, h);
@@ -34,8 +34,10 @@ export default function Matrix(props) {
             });
         }
         function resizeCanvas(){
-            canvas.width = document.body.offsetWidth;
-            canvas.height = document.body.offsetHeight;
+            w = canvas.width = document.body.offsetWidth;
+            h = canvas.height = document.body.offsetHeight;
+            cols = Math.floor(w / 20) + 1;
+        colArrays = Array(cols).fill(0);
         }
         setInterval(matrix, 50);
         return () =>{

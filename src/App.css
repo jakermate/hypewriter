@@ -47,3 +47,6 @@
 .matrix-keyboard{
   background-color: black;
 }
+canvas{
+  -webkit-tap-highlight-color: transparent;
+}
