@@ -22,7 +22,7 @@ export default function Matrix(props) {
             ctx.fillRect(0, 0, w, h);
 
             ctx.fillStyle = '#0f0';
-            ctx.font = `${currentChar ? "bold" : ""} 15pt monospace`;
+            ctx.font = `${currentChar ? "boldest" : ""} 15pt monospace`;
             
             colArrays.forEach((y, ind) => {
                 let text = currentChar ? currentChar : String.fromCharCode(Math.random() * 128);
