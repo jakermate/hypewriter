@@ -3,7 +3,15 @@ import Ink from './Ink'
 import phrases from '../data/phrases'
 import char from 'char-to-string'
 import SimpleKeyboard from 'react-simple-keyboard'
+import styled from 'styled-components'
+import KeySound from '../sounds/typewriter_key.wav'
+import ReturnSound from '../sounds/typewriter_return.wav'
+
 export default function Typewriter(props) {
+  const keySound = new Audio(KeySound)
+  const returnSound = new Audio(ReturnSound)
+
+
   const generateLetter = (letterString, match) => { // Generate new letter object with random positioning for Ink component
     return {
       string: letterString + (match[1] === 0 ? "." : ""),
@@ -11,7 +19,7 @@ export default function Typewriter(props) {
       randY: getRandPosNeg(),
       randR: getRandPosNeg(),
       randO: Math.random() + .5,
-      color: match[0] ? (Math.random() > .5 ? '#8b0000': "#bb0a1e") : 'black'
+      color: match[0] ? (Math.random() > .5 ? '#8b0000' : "#bb0a1e") : 'black'
     }
   }
 
@@ -20,11 +28,18 @@ export default function Typewriter(props) {
   const insertInk = (newLetter) => {
     let oldPage = [...paper]
     let row = oldPage[oldPage.length - 1]
-    console.log(row.length)
     if (row.length >= 30) {
+      if (newLetter.string == " ") return
+      // check rows
+      if(oldPage.length >= 40){
+        oldPage.shift()
+      }
+      props.soundEnabled && returnSound.play()
       setPaper([...oldPage, [newLetter]]) // Insert new row with new letter
+      
     }
-    else{
+    else {
+      props.soundEnabled && keySound.play()
       row.push(newLetter)
       setPaper(oldPage)
     }
@@ -38,15 +53,15 @@ export default function Typewriter(props) {
   const checkIfNextLetter = (letter) => {
     let phrase = currentPhrase
     if (phrase.charAt(0).toUpperCase() === letter) {
-      console.log("letter hit")
+      // console.log("letter hit")
       let trimmedPhrase = phrase.substring(1)
-      if(trimmedPhrase.length == 0){
+      if (trimmedPhrase.length == 0) {
         // end statement and select new phrase
         setCurrentPhrase(phrases[pickRandomIndex(phrases)])
       }
-      else{
+      else {
         setCurrentPhrase(trimmedPhrase)
-      } 
+      }
       return [true, trimmedPhrase.length]
     }
     return [false, null]
@@ -55,56 +70,53 @@ export default function Typewriter(props) {
   useEffect(() => {
     // Events
     window.addEventListener('keydown', handleKeyDown)
-    window.addEventListener('keyup', handleKeyUp)
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
-      window.removeEventListener('keyup', handleKeyUp)
     }
   })
   // INIT
-  useEffect(()=>{
+  useEffect(() => {
     // Set current phrase
     setCurrentPhrase(phrases[pickRandomIndex(phrases)])
-  },[])
+  }, [])
   // PHYSICAL KEYBOARD
   const handleKeyDown = (event) => {
-    if(!checkIfAllowed(event.keyCode)) return
-    if(deleteUsed(event.keyCode)){
+    let keyString = event.key.toUpperCase()
+    console.log(keyString)
+    if (!checkIfAllowed(keyString)) return
+    if (deleteUsed(event.keyCode)) {
       return
     }
-    if(event.repeat) return
-    let keyString = char(event.keyCode)
+    if (event.repeat) return
     // Create key object
     let match = checkIfNextLetter(keyString)
     const newKeyObj = generateLetter(keyString, match)
     insertInk(newKeyObj)
-    if(match[1] === 0) insertBlank()
+    if (match[1] === 0) insertBlank()
   }
   const deleteUsed = (keycode) => {
-    if(keycode == 8){
+    if (keycode == 8) {
       let oldpaper = [...paper]
       oldpaper.at(-1).at(-1).color = "#ffffff"
       return true
     }
     return false
   }
-  const handleKeyUp = (event) => {
-    let keyString = char(event.keyCode)
-  }
+  const allowedKeys = "abcdefghijklmniopqrstuvwxyz1234567890.,' ?".toUpperCase()
   const checkIfAllowed = (keycode) => {
-    if(checkNum(keycode) || checkOther(keycode) || checkAlpha(keycode)) return true
+    if (allowedKeys.includes(keycode)) return true
     return false
   }
   const checkNum = (keycode) => {
-    if(keycode < 48 || keycode > 57) return false
-    return true
+    if (48 < keycode < 57) return true
+    return false
   }
   const checkAlpha = (keycode) => {
-    if(keycode < 65 || keycode > 90) return false
-    return true
+    if (65 < keycode < 90) return true
+    return false
   }
   const checkOther = (keycode) => {
-    if(keycode == 32 || 13) return true
+    if (keycode == 32 || 13 || 190) return true
     return false
   }
   const insertBlank = () => {
@@ -112,41 +124,51 @@ export default function Typewriter(props) {
     setPaper(newPaper)
   }
   // VIRTUAL KEYBOARD
-  function keyboardPress(e){
+  function keyboardPress(e) {
     let keyString = e.toUpperCase()
     // Create key object
-    
-  }
-  function keyboardRelease(e){
-  }
-  useEffect(() => {
-    console.log(paper)
-  }, [paper])
 
-  return <div id="paper" className="right-0 left-0 absolute bottom-0 mx-auto pb-12 flex flex-col" style={{
-    perspective: '1000px',
-    perspectiveOrigin: 'center 100%'
-  }}>
-    <div className="max-w-xl mx-auto pb-12">
-    {
-      paper && paper.map((row, i) => {
-        return (
-          <Row key={`row-${i}`}>
-            {
-              row.map((keyObj, j) => {
-                return (
-                  <Ink keyObj={keyObj} key={`row-${i}-ink-${j}`} />
-                )
-              })
-            }
-          </Row>
-        )
-      })
-    }
+  }
+  function keyboardRelease(e) {
+  }
+
+
+  return (
+    <div className="relative h-full flex flex-col">
+      <Overlay direction={'bottom'} id="paper-overlay" className="z-10"></Overlay>
+      <div id="type-writer" className="right-0 flex-grow left-0  bottom-0 mx-auto pb-12 flex flex-col" style={{
+        perspective: '1000px',
+        perspectiveOrigin: 'center 100%'
+      }}>
+        <div className="max-w-xl w-full rounded-md flex flex-col justify-end mx-auto mb-12 py-4 px-8 flex-grow relative" id="paper" style={{
+          boxShadow: 'rgba(17, 12, 46, 0.15) 0px 48px 40px 0px'
+        }}>
+          {
+            paper && paper.map((row, i) => {
+              return (
+                <Row key={`row-${i}`}>
+                  {
+                    row.map((keyObj, j) => {
+                      return (
+                        <Ink keyObj={keyObj} key={`row-${i}-ink-${j}`} />
+                      )
+                    })
+                  }
+                </Row>
+              )
+            })
+          }
+          
+          {/* <Overlay direction={'top'} id="paper-overlay" className="z-10"></Overlay> */}
+        </div>
+          <div id="keyboard-container" className="rounded-lg bg-slate-300 mx-auto p-4 shadow-2xl">
+
+        <Keyboard keyboardRelease={keyboardRelease} keyboardPress={keyboardPress}></Keyboard>
+          </div>
+      </div>
     </div>
-    
-    <Keyboard keyboardRelease={keyboardRelease} keyboardPress={keyboardPress}></Keyboard>
-  </div>
+  )
+
 }
 
 function Row(props) {
@@ -203,3 +225,12 @@ function Keyboard(props) {
     ></SimpleKeyboard>
   )
 }
+
+const Overlay = styled.div`
+  position: absolute;
+  left: 0;
+  right:0;
+  ${props => props.direction === 'bottom' ? "top: 0;" : "bottom: 0;"}
+  height: 200px;
+  background: linear-gradient(to ${props => props.direction}, #ffffff, #ffffff, #ffffff00);
+`

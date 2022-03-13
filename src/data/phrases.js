@@ -6,5 +6,7 @@ export default [
     "redrum",
     "followthewhiterabbit",
     "welcometotherealworld",
-    "youaretheone"
+    "youaretheone",
+    "thereisnospoon",
+    "wehavebeenwatchingyou"
 ]
